@@ -9,7 +9,7 @@ ruleset wovyn_base {
   }
 
   global {
-    temperature_threshold = 72
+    temperature_threshold = 71
     notification_number = "+13033324277"
   }
 

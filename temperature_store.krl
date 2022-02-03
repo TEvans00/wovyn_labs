@@ -2,10 +2,8 @@ ruleset temperature_store {
   meta {
     name "Temperature Store"
     author "Tyla Evans"
-    /*
     provides temperatures, threshold_violations, inrange_temperatures
     shares temperatures, threshold_violations, inrange_temperatures
-    */
   }
 
   global {
@@ -18,9 +16,10 @@ ruleset temperature_store {
     inrange_temperatures = function(x) {
       ent:temperatures.filter(
         function(temp) {
-          function(violation) {
-            none(temp{"temp"} == violation{"temp"})
-          }
+          ent:threshold_violations.none(
+            function(violation) {
+              temp{"temp"} == violation{"temp"}
+            })
         })
     };
   }
@@ -56,7 +55,7 @@ ruleset temperature_store {
     if true then noop()
     always {
       ent:threshold_violations := ent:threshold_violations.defaultsTo([], "initialization was needed").klog("current temperature violations:");
-      ent:threshold_violations := ent:temperatures.append({"temp": temperature, "time": timestamp}).klog("new temperature violations:");
+      ent:threshold_violations := ent:threshold_violations.append({"temp": temperature, "time": timestamp}).klog("new temperature violations:");
     }
   }
 }
